@@ -1,0 +1,39 @@
+# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+name: Java CI with Maven
+ 
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+ 
+jobs:
+  build:
+ 
+    runs-on: ubuntu-latest
+ 
+    steps:
+    - uses: actions/checkout@v4
+    - name: Carregando o JAVA 19
+      uses: actions/setup-java@v4
+      with:
+        java-version: '19'
+        distribution: 'temurin'
+        cache: maven
+    - name: Compilar por MAVEN
+      run: mvn -B package --file pom.xml
+    - name: Render Deploy Action
+    # You may pin to the exact commit or the version.
+    # uses: johnbeynon/render-deploy-action@a0588f9aca995a15d69a72cb2bfbf37c12e5b540
+      uses: johnbeynon/render-deploy-action@v0.0.8
+      with:
+        # ID of the service to deploy
+        service-id: ${{secrets.id}}
+        # A Render API key certa
+        api-key: ${{secrets.key}}
